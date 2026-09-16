@@ -1,0 +1,40 @@
+const Router = require("express").Router();
+
+const AboutRouter = require("./AboutRoutes");
+const BlogRouter = require("./BlogRoutes");
+const CampaignRouter = require("./CampaignRoutes");
+const ContactMessageRouter = require("./ContactMessageRoutes");
+const DonationRouter = require("./DonationRoutes");
+const EventRouter = require("./EventRoutes");
+const FAQRouter = require("./FAQRoutes");
+const GalleryRouter = require("./GalleryRoutes");
+const ImpactRouter = require("./ImpactRoutes");
+const PartnerRouter = require("./PartnerRoutes");
+const ProjectRouter = require("./ProjectRoutes");
+const ProgramRouter = require("./ProgramRoutes");
+const TeamRouter = require("./TeamRoutes");
+const TeamMemberRouter = require("./TeamMemberRoutes");
+const TestimonialRouter = require("./TestimonialRoutes");
+const UserRouter = require("./UserRoutes");
+const VolunteerRouter = require("./VolunteerRoutes");
+
+Router.use("/about", AboutRouter);
+Router.use("/blog", BlogRouter);
+Router.use("/campaign", CampaignRouter);
+Router.use("/contactmessage", ContactMessageRouter);
+Router.use("/contactus", ContactMessageRouter);
+Router.use("/donation", DonationRouter);
+Router.use("/event", EventRouter);
+Router.use("/faq", FAQRouter);
+Router.use("/gallery", GalleryRouter);
+Router.use("/impact", ImpactRouter);
+Router.use("/partner", PartnerRouter);
+Router.use("/project", ProjectRouter);
+Router.use("/program", ProgramRouter);
+Router.use("/team", TeamRouter);
+Router.use("/teammember", TeamMemberRouter);
+Router.use("/testimonial", TestimonialRouter);
+Router.use("/user", UserRouter);
+Router.use("/volunteer", VolunteerRouter);
+
+module.exports = Router;
