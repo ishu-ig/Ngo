@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { useRazorpay } from 'react-razorpay';
 import { X, Heart, ShieldCheck, CheckCircle2, Sparkles, CreditCard, AlertCircle } from 'lucide-react';
+import TechnicalModal from './TechnicalModal';
 
 export default function DonationModal({ isOpen, onClose, defaultCause = null }) {
-  const { Razorpay } = useRazorpay();
-
   const [frequency, setFrequency] = useState('monthly');
   const [amount, setAmount] = useState(1000);
   const [customAmount, setCustomAmount] = useState('');
@@ -13,6 +11,7 @@ export default function DonationModal({ isOpen, onClose, defaultCause = null }) 
   const [processing, setProcessing] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [receiptTxnId, setReceiptTxnId] = useState('');
+  const [showTechnicalModal, setShowTechnicalModal] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -49,109 +48,8 @@ export default function DonationModal({ isOpen, onClose, defaultCause = null }) 
     e.preventDefault();
     if (!formData.name || !formData.email) return;
 
-    try {
-      setProcessing(true);
-      setErrorMsg('');
-
-      // 1. Create donation record in backend
-      const donationRes = await fetch(`${process.env.REACT_APP_BACKEND_SERVER}/api/donation`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          donorName: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          amount: currentAmount,
-          currency: "INR",
-          message: defaultCause || "General Relief Support",
-          panNumber: formData.panNumber,
-          paymentStatus: "pending",
-          paymentMethod: "Razorpay"
-        })
-      });
-
-      const donationData = await donationRes.json();
-      const savedDonation = donationData.data || donationData;
-      const donationId = savedDonation?._id;
-
-      // 2. Create Razorpay order
-      const orderRes = await fetch(`${process.env.REACT_APP_BACKEND_SERVER}/api/donation/donation`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: currentAmount,
-          currency: "INR"
-        })
-      });
-
-      const orderData = await orderRes.json();
-      const order = orderData.data;
-
-      const rzpKey = process.env.REACT_APP_RPKEYID || "rzp_test_hPWsSLPsp2DADQ";
-
-      const options = {
-        key: rzpKey,
-        amount: order?.amount || (currentAmount * 100),
-        currency: order?.currency || "INR",
-        name: "Subhashish Wellfare Foundation",
-        description: `Contribution for ${defaultCause || "Grassroots Relief"}`,
-        image: "/assets/images/logo.png",
-        order_id: order?.id,
-        prefill: {
-          name: formData.name,
-          email: formData.email,
-          contact: formData.phone || ""
-        },
-        theme: {
-          color: "#0f766e"
-        },
-        handler: async function (response) {
-          try {
-            setProcessing(true);
-            const txnId = response.razorpay_payment_id || "TXN_" + Date.now();
-            setReceiptTxnId(txnId);
-
-            if (donationId) {
-              await fetch(`${process.env.REACT_APP_BACKEND_SERVER}/api/donation/verify`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  checkid: donationId,
-                  razorpay_order_id: response.razorpay_order_id || order?.id || "ORDER_" + Date.now(),
-                  razorpay_payment_id: txnId,
-                  razorpay_signature: response.razorpay_signature || "TEST_SIG"
-                })
-              });
-            }
-
-            setStep(3);
-          } catch (verErr) {
-            console.error("Payment Verify Error:", verErr);
-            setStep(3); // Still show receipt if card was charged
-          } finally {
-            setProcessing(false);
-          }
-        },
-        modal: {
-          ondismiss: function () {
-            setProcessing(false);
-          }
-        }
-      };
-
-      const rzp = new Razorpay(options);
-      rzp.on("payment.failed", function (response) {
-        setProcessing(false);
-        setErrorMsg(response.error?.description || "Payment failed. Please try again.");
-      });
-
-      rzp.open();
-
-    } catch (err) {
-      console.error("Donation Submit Error:", err);
-      setProcessing(false);
-      setErrorMsg("Could not connect to payment gateway. Please try again.");
-    }
+    // Trigger the technical maintenance modal popup
+    setShowTechnicalModal(true);
   };
 
   const handleReset = () => {
@@ -159,6 +57,7 @@ export default function DonationModal({ isOpen, onClose, defaultCause = null }) 
     setReceiptTxnId('');
     setErrorMsg('');
     setProcessing(false);
+    setShowTechnicalModal(false);
     onClose();
   };
 
@@ -378,6 +277,11 @@ export default function DonationModal({ isOpen, onClose, defaultCause = null }) 
           </div>
         )}
       </div>
+
+      <TechnicalModal
+        isOpen={showTechnicalModal}
+        onClose={() => setShowTechnicalModal(false)}
+      />
     </div>
   );
 }

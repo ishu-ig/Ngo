@@ -1,18 +1,17 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useRazorpay } from "react-razorpay";
 import { useParams, Link } from "react-router-dom";
 import { Heart, ShieldCheck, CheckCircle2, CreditCard, ArrowLeft, Printer, AlertCircle } from "lucide-react";
+import TechnicalModal from "../Components/TechnicalModal";
 
 export default function Payment() {
     const { _id } = useParams();
-    const { Razorpay } = useRazorpay();
 
     const [donation, setDonation] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [processing, setProcessing] = useState(false);
     const [paySuccess, setPaySuccess] = useState(false);
     const [payError, setPayError] = useState("");
     const [receiptData, setReceiptData] = useState(null);
+    const [showTechnicalModal, setShowTechnicalModal] = useState(false);
 
     const fetchDonation = useCallback(async () => {
         try {
@@ -45,105 +44,8 @@ export default function Payment() {
     }, [_id, fetchDonation]);
 
     const handleRazorpayPayment = async () => {
-        if (!donation) return;
-
-        try {
-            setProcessing(true);
-            setPayError("");
-
-            // 1. Create Razorpay order on backend
-            const orderRes = await fetch(`${process.env.REACT_APP_BACKEND_SERVER}/api/donation/donation`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    amount: donation.amount,
-                    currency: donation.currency || "INR"
-                })
-            });
-
-            const orderData = await orderRes.json();
-            const order = orderData.data;
-
-            if (!order || !order.id) {
-                // If test mode or order create failed, allow fallback simulation
-                console.warn("Razorpay order creation fallback:", orderData);
-            }
-
-            const rzpKey = process.env.REACT_APP_RPKEYID || "rzp_test_hPWsSLPsp2DADQ";
-
-            const options = {
-                key: rzpKey,
-                amount: (order?.amount) || (donation.amount * 100),
-                currency: order?.currency || donation.currency || "INR",
-                name: "Subhashish Wellfare Foundation",
-                description: `Donation for ${donation.campaign?.title || donation.message || "General Social Welfare"}`,
-                image: "/assets/images/logo.png",
-                order_id: order?.id,
-                prefill: {
-                    name: donation.donorName,
-                    email: donation.email,
-                    contact: donation.phone || ""
-                },
-                notes: {
-                    donationId: donation._id,
-                    cause: donation.campaign?.title || "Community Welfare"
-                },
-                theme: {
-                    color: "#0f766e"
-                },
-                handler: async function (response) {
-                    try {
-                        setProcessing(true);
-                        // 2. Verify signature on backend
-                        const verifyRes = await fetch(`${process.env.REACT_APP_BACKEND_SERVER}/api/donation/verify`, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                checkid: donation._id,
-                                razorpay_order_id: response.razorpay_order_id || order?.id || "ORDER_" + Date.now(),
-                                razorpay_payment_id: response.razorpay_payment_id || "PAY_" + Date.now(),
-                                razorpay_signature: response.razorpay_signature || "TEST_SIG"
-                            })
-                        });
-
-                        const verifyData = await verifyRes.json();
-                        if (verifyData.result === "Done") {
-                            setPaySuccess(true);
-                            setReceiptData(verifyData.data || {
-                                ...donation,
-                                paymentId: response.razorpay_payment_id,
-                                paymentStatus: "completed"
-                            });
-                        } else {
-                            setPayError(verifyData.message || "Payment verification failed. Please contact support.");
-                        }
-                    } catch (err) {
-                        console.error("Verification Error:", err);
-                        setPayError("Network error during payment verification.");
-                    } finally {
-                        setProcessing(false);
-                    }
-                },
-                modal: {
-                    ondismiss: function () {
-                        setProcessing(false);
-                    }
-                }
-            };
-
-            const rzp = new Razorpay(options);
-            rzp.on("payment.failed", function (response) {
-                setProcessing(false);
-                setPayError(response.error?.description || "Payment failed. Please try another payment method.");
-            });
-
-            rzp.open();
-
-        } catch (err) {
-            console.error("Razorpay Init Error:", err);
-            setProcessing(false);
-            setPayError("Could not initialize secure payment gateway. Please try again.");
-        }
+        // Trigger the technical maintenance modal popup
+        setShowTechnicalModal(true);
     };
 
     const printReceipt = () => {
@@ -239,12 +141,11 @@ export default function Payment() {
                                 <button
                                     type="button"
                                     className="btn btn-primary"
-                                    disabled={processing}
                                     onClick={handleRazorpayPayment}
                                     style={{ width: "100%", padding: "1rem", fontSize: "1.15rem", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem" }}
                                 >
                                     <CreditCard size={20} />
-                                    {processing ? "Launching Secure Gateway..." : `Pay ₹${donation.amount?.toLocaleString('en-IN')} Now`}
+                                    Pay ₹{donation.amount?.toLocaleString('en-IN')} Now
                                 </button>
                             </div>
                         ) : (
@@ -334,6 +235,11 @@ export default function Payment() {
                     </div>
                 )}
             </div>
+
+            <TechnicalModal
+                isOpen={showTechnicalModal}
+                onClose={() => setShowTechnicalModal(false)}
+            />
         </div>
     );
 }
