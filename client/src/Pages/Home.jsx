@@ -6,7 +6,14 @@ import { getBlog } from '../Redux/ActionCreators/BlogActionCreators';
 import { getTestimonial } from '../Redux/ActionCreators/TestimonialActionCreators';
 import { getPartner } from '../Redux/ActionCreators/PartnerActionCreators';
 import { getGallery } from '../Redux/ActionCreators/GalleryActionCreators';
+import { getProject } from '../Redux/ActionCreators/ProjectActionCreators';
 import { createContactUs } from '../Redux/ActionCreators/ContactUsActionCreators';
+import ProgramModal from '../Components/ProgramModal';
+import ProgramCard from '../Components/ProgramCard';
+import CampaignModal from '../Components/CampaignModal';
+import CampaignCard from '../Components/CampaignCard';
+import { getCampaign } from '../Redux/ActionCreators/CampaignActionCreators';
+import { defaultCampaigns } from '../data/defaultCampaigns';
 import {
   Heart,
   Play,
@@ -50,6 +57,10 @@ export default function Home({
   const TestimonialStateData = useSelector((state) => state.TestimonialStateData);
   const PartnerStateData = useSelector((state) => state.PartnerStateData);
   const GalleryStateData = useSelector((state) => state.GalleryStateData);
+  const ProjectStateData = useSelector((state) => state.ProjectStateData);
+  const CampaignStateData = useSelector((state) => state.CampaignStateData);
+  const [selectedProgram, setSelectedProgram] = useState(null);
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
 
   useEffect(() => {
     dispatch(getAbout());
@@ -57,6 +68,8 @@ export default function Home({
     dispatch(getTestimonial());
     dispatch(getPartner());
     dispatch(getGallery());
+    dispatch(getProject());
+    dispatch(getCampaign());
   }, [dispatch]);
 
   // Gallery active tab
@@ -76,73 +89,234 @@ export default function Home({
     message: ''
   });
 
-  // 8 Core Programs (as specified in PDF)
+  // Campaigns normalization from Redux CampaignStateData (with fallback to curated defaults)
+  const rawCampaigns = Array.isArray(CampaignStateData)
+    ? CampaignStateData
+    : (CampaignStateData?.data || []);
+  const displayCampaigns = rawCampaigns.length > 0 ? rawCampaigns : defaultCampaigns;
+  const featuredCampaign = displayCampaigns.find((c) => c.featured) || displayCampaigns[0];
+  const otherCampaigns = displayCampaigns.filter(
+    (c) => (c._id || c.id) !== (featuredCampaign?._id || featuredCampaign?.id)
+  );
+
+  // 8 Core Programs (Enriched with objectives, impact metrics & background)
   const programs = [
     {
       id: 1,
+      _id: 'prog-1',
       title: 'Education for Every Child',
       category: 'Education',
       icon: BookOpen,
+      featuredImage: '/assets/images/cause-2.jpg',
       img: '/assets/images/cause-2.jpg',
-      desc: 'Equipping rural classrooms with modern learning supplies, digital tablets, uniforms, and certified teacher training to end illiteracy.'
+      shortDescription: 'Equipping rural classrooms with modern learning supplies, digital tablets, uniforms, and certified teacher training to end illiteracy.',
+      desc: 'Equipping rural classrooms with modern learning supplies, digital tablets, uniforms, and certified teacher training to end illiteracy.',
+      fullDescription: 'Shiksha Setu equips rural community schools with solar-powered digital tablets, age-appropriate STEM kits, bilingual storybooks, desks, and uniforms. Concurrently, our certified pedagogy trainers upskill village teachers and run remedial tutoring centers to eliminate school dropouts.',
+      objectives: [
+        'Deploy solar-powered smart digital learning corners in 60+ rural schools',
+        'Distribute comprehensive school kits (uniforms, bags, stationery, shoes) to 4,500+ pupils',
+        'Train 180+ local teachers in interactive, outcome-based pedagogy',
+        'Provide daily nutritional booster supplements to reduce classroom fatigue'
+      ],
+      location: 'Bihar & Uttar Pradesh',
+      beneficiaries: { count: 4500, targetGroup: 'Rural Students' },
+      budget: { raisedAmount: 1850000, targetAmount: 2500000 },
+      status: 'ongoing',
+      startDate: '2023-01-15'
     },
     {
       id: 2,
+      _id: 'prog-2',
       title: 'Healthcare & Pediatric Care',
       category: 'Healthcare',
       icon: Stethoscope,
+      featuredImage: '/assets/images/cause-3.jpg',
       img: '/assets/images/cause-3.jpg',
-      desc: 'Deploying mobile health vans, free diagnostics, maternal clinics, and pediatric malnutrition treatments in remote areas.'
+      shortDescription: 'Deploying mobile health vans, free diagnostics, maternal clinics, and pediatric malnutrition treatments in remote areas.',
+      desc: 'Deploying mobile health vans, free diagnostics, maternal clinics, and pediatric malnutrition treatments in remote areas.',
+      fullDescription: 'Our specialized mobile medical clinics carry licensed physicians, neonatal nurses, and portable pathology equipment to tribal and rural hamlets situated over 40 km from the nearest government clinic, providing doorstep preventative screenings, immunizations, and maternal healthcare.',
+      objectives: [
+        'Operate 8 GPS-tracked mobile clinical vans servicing 140+ remote hamlets',
+        'Screen and treat over 12,000 children annually for acute malnutrition & rickets',
+        'Administer mandatory childhood vaccinations and micronutrient drops',
+        'Conduct antenatal checkups and safe-motherhood counseling for expectant mothers'
+      ],
+      location: 'Rajasthan & Madhya Pradesh',
+      beneficiaries: { count: 12000, targetGroup: 'Mothers & Children' },
+      budget: { raisedAmount: 2450000, targetAmount: 3200000 },
+      status: 'ongoing',
+      startDate: '2022-08-10'
     },
     {
       id: 3,
+      _id: 'prog-3',
       title: 'Women Empowerment & Vocations',
       category: 'Women Empowerment',
       icon: Users,
+      featuredImage: '/assets/images/cause-4.jpg',
       img: '/assets/images/cause-4.jpg',
-      desc: 'Conducting tailoring, handicraft, and digital skill workshops along with seed micro-grants for self-sustainable livelihood.'
+      shortDescription: 'Conducting tailoring, handicraft, and digital skill workshops along with seed micro-grants for self-sustainable livelihood.',
+      desc: 'Conducting tailoring, handicraft, and digital skill workshops along with seed micro-grants for self-sustainable livelihood.',
+      fullDescription: 'Through localized skill guilds, marginalized women receive intensive vocational training in precision tailoring, block-printing, and handicraft production. Upon graduation, each woman is provided with a sewing machine or trade toolkit alongside seed micro-grants.',
+      objectives: [
+        'Train 2,800+ rural women in sustainable crafts, garment production, and digital bookkeeping',
+        'Distribute 1,200+ commercial sewing machines and production starter packs',
+        'Connect self-help groups directly with ethical retail buyers and e-commerce markets',
+        'Conduct financial literacy, banking, and micro-loan management workshops'
+      ],
+      location: 'West Bengal & Odisha',
+      beneficiaries: { count: 2800, targetGroup: 'Women Artisans & Entrepreneurs' },
+      budget: { raisedAmount: 1400000, targetAmount: 1800000 },
+      status: 'ongoing',
+      startDate: '2023-03-01'
     },
     {
       id: 4,
+      _id: 'prog-4',
       title: 'Child Welfare & Protection',
       category: 'Child Welfare',
       icon: Heart,
+      featuredImage: '/assets/images/image_2.jpg',
       img: '/assets/images/image_2.jpg',
-      desc: 'Rescuing vulnerable youth from forced child labor, providing safe shelter, foster support, and holistic rehabilitation.'
+      shortDescription: 'Rescuing vulnerable youth from forced child labor, providing safe shelter, foster support, and holistic rehabilitation.',
+      desc: 'Rescuing vulnerable youth from forced child labor, providing safe shelter, foster support, and holistic rehabilitation.',
+      fullDescription: 'Bal Suraksha operates round-the-clock child protection interventions to eliminate hazardous child labor, prevent trafficking, and rescue runaway children, providing emergency shelter, trauma counseling, legal aid, and formal school re-enrollment.',
+      objectives: [
+        'Operate safe transitional emergency shelters equipped with counseling facilities',
+        'Rescue youth from hazardous brick kilns, roadside motels, and industrial workshops',
+        'Provide psycho-social rehabilitation and cognitive trauma healing therapies',
+        'Facilitate complete family tracing, reunification, and formal school enrollment'
+      ],
+      location: 'Delhi NCR & Haryana',
+      beneficiaries: { count: 1600, targetGroup: 'Rescued Children' },
+      budget: { raisedAmount: 1950000, targetAmount: 2200000 },
+      status: 'ongoing',
+      startDate: '2021-11-20'
     },
     {
       id: 5,
+      _id: 'prog-5',
       title: 'Environmental & Clean Energy',
       category: 'Environment',
       icon: TreePine,
+      featuredImage: '/assets/images/image_3.jpg',
       img: '/assets/images/image_3.jpg',
-      desc: 'Planting 100,000+ native trees, setting up solar village grids, and leading plastic-free waste management drives.'
+      shortDescription: 'Planting 100,000+ native trees, setting up solar village grids, and leading plastic-free waste management drives.',
+      desc: 'Planting 100,000+ native trees, setting up solar village grids, and leading plastic-free waste management drives.',
+      fullDescription: 'Combating deforestation, groundwater depletion, and energy poverty in fragile ecological zones through high-density Miyawaki afforestation, rainwater check dams, and decentralized rooftop solar microgrids for rural health clinics.',
+      objectives: [
+        'Plant and nurture over 100,000 native saplings with an 88%+ survival guarantee',
+        'Construct 35 rainwater catchment check dams to replenish farm aquifers',
+        'Install solar microgrids across village clinics, schools, and streetlighting circuits',
+        'Mobilize 15,000+ local youth in plastic waste collection and river cleanup campaigns'
+      ],
+      location: 'Uttarakhand & Himachal',
+      beneficiaries: { count: 8500, targetGroup: 'Rural Communities' },
+      budget: { raisedAmount: 1100000, targetAmount: 1500000 },
+      status: 'ongoing',
+      startDate: '2022-06-05'
     },
     {
       id: 6,
+      _id: 'prog-6',
       title: 'Food & Emergency Relief',
       category: 'Food & Relief',
       icon: Utensils,
+      featuredImage: '/assets/images/cause-6.jpg',
       img: '/assets/images/cause-6.jpg',
-      desc: 'Delivering 3,500+ hot nutritious mid-day meals daily and distributing emergency ration kits during natural disasters.'
+      shortDescription: 'Delivering 3,500+ hot nutritious mid-day meals daily and distributing emergency ration kits during natural disasters.',
+      desc: 'Delivering 3,500+ hot nutritious mid-day meals daily and distributing emergency ration kits during natural disasters.',
+      fullDescription: 'Operating automated community kitchens and rapid-deployment disaster relief convoys, delivering nutritious hot meals daily to pediatric wards and shelter homes, and distributing survival packs during floods and natural crises.',
+      objectives: [
+        'Cook and distribute 3,500+ balanced, hygienically prepared hot meals every day',
+        'Maintain a ready stockpile of emergency ration and medical kits for rapid disaster deployment',
+        'Provide safe, clean drinking water filtration pouches during monsoon flood crises',
+        'Distribute infant formula, protein mixes, and clean water canisters to affected families'
+      ],
+      location: 'Assam, Bihar & Gujarat',
+      beneficiaries: { count: 35000, targetGroup: 'Disaster Victims & Daily Wage Earners' },
+      budget: { raisedAmount: 3600000, targetAmount: 4000000 },
+      status: 'ongoing',
+      startDate: '2020-10-15'
     },
     {
       id: 7,
+      _id: 'prog-7',
       title: 'Livelihood & Skill Development',
       category: 'Skill Development',
       icon: Briefcase,
+      featuredImage: '/assets/images/image_4.jpg',
       img: '/assets/images/image_4.jpg',
-      desc: 'Vocational technical training, electrical, plumbing, and computer literacy certifications for marginalized youth.'
+      shortDescription: 'Vocational technical training, electrical, plumbing, and computer literacy certifications for marginalized youth.',
+      desc: 'Vocational technical training, electrical, plumbing, and computer literacy certifications for marginalized youth.',
+      fullDescription: 'Providing industry-aligned vocational certifications in electrical trades, plumbing, solar maintenance, and computer literacy for underprivileged youth, paired with professional toolkits and verified local employment placement.',
+      objectives: [
+        'Conduct 6-month hands-on certified vocational apprenticeship programs',
+        'Provide graduates with professional toolkits and trade starter kits',
+        'Equip modern computer labs for digital literacy and coding fundamentals',
+        'Facilitate guaranteed placement interviews with regional employers'
+      ],
+      location: 'Jharkhand & Chhattisgarh',
+      beneficiaries: { count: 3200, targetGroup: 'Youth Job Seekers' },
+      budget: { raisedAmount: 1650000, targetAmount: 2100000 },
+      status: 'ongoing',
+      startDate: '2022-09-12'
     },
     {
       id: 8,
+      _id: 'prog-8',
       title: 'Rural Community Development',
       category: 'Rural Development',
       icon: HomeIcon,
+      featuredImage: '/assets/images/cause-1.jpg',
       img: '/assets/images/cause-1.jpg',
-      desc: 'Installing solar-powered deep bore water wells, community sanitation blocks, and disaster-resilient village community shelters.'
+      shortDescription: 'Installing solar-powered deep bore water wells, community sanitation blocks, and disaster-resilient village community shelters.',
+      desc: 'Installing solar-powered deep bore water wells, community sanitation blocks, and disaster-resilient village community shelters.',
+      fullDescription: 'Transforming rural infrastructure through deep solar-powered bore wells with multi-stage filtration units, modern public sanitation facilities, clean paving, and disaster-resilient community centers.',
+      objectives: [
+        'Install 25 solar-powered deep borewells with clean drinking water filtration',
+        'Construct modern hygienic gender-separated community sanitation facilities',
+        'Erect cyclone- and earthquake-resilient multi-purpose community centers',
+        'Train village maintenance committees for perpetual infrastructure upkeep'
+      ],
+      location: 'Maharashtra & Karnataka',
+      beneficiaries: { count: 18000, targetGroup: 'Village Residents' },
+      budget: { raisedAmount: 2900000, targetAmount: 3500000 },
+      status: 'ongoing',
+      startDate: '2021-04-18'
     }
   ];
+
+  const projectsList = Array.isArray(ProjectStateData)
+    ? ProjectStateData
+    : (ProjectStateData?.data || []);
+
+  const displayPrograms = projectsList.length > 0 ? projectsList : programs;
+
+  const getCategoryIcon = (cat) => {
+    switch (cat) {
+      case 'Education':
+        return <BookOpen size={15} />;
+      case 'Healthcare':
+        return <Stethoscope size={15} />;
+      case 'Women Empowerment':
+        return <Users size={15} />;
+      case 'Child Welfare':
+        return <Heart size={15} />;
+      case 'Environment':
+        return <TreePine size={15} />;
+      case 'Disaster Relief':
+      case 'Food & Relief':
+        return <Utensils size={15} />;
+      case 'Skill Development':
+        return <Briefcase size={15} />;
+      case 'Rural Development':
+      case 'Community Development':
+        return <HomeIcon size={15} />;
+      default:
+        return <Sparkles size={15} />;
+    }
+  };
 
   // Success Stories (as specified in PDF)
   const successStories = [
@@ -519,121 +693,85 @@ export default function Home({
           </div>
 
           <div className="programs-grid">
-            {programs.map((prog) => {
-              const IconComp = prog.icon;
-              return (
-                <div key={prog.id} className="cause-card" style={{ display: 'flex', flexDirection: 'column' }}>
-                  <div className="cause-img-box" style={{ height: '170px' }}>
-                    <img src={prog.img} alt={prog.title} />
-                    <span className="cause-category-badge">{prog.category}</span>
-                  </div>
-                  <div className="cause-body" style={{ padding: 'clamp(0.75rem, 2vw, 1.25rem)', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary)', marginBottom: '0.4rem' }}>
-                      <IconComp size={16} style={{ flexShrink: 0 }} />
-                      <span style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase' }}>{prog.category}</span>
-                    </div>
-                    <h3 style={{ fontSize: 'clamp(0.95rem, 2vw, 1.1rem)', marginBottom: '0.4rem', lineHeight: 1.3 }}>{prog.title}</h3>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.825rem', lineHeight: 1.5, marginBottom: '1rem', flexGrow: 1 }}>
-                      {prog.desc}
-                    </p>
-                    <div style={{ display: 'flex', gap: '0.4rem', marginTop: 'auto', flexWrap: 'wrap' }}>
-                      <button
-                        type="button"
-                        className="btn btn-outline btn-sm"
-                        style={{ flex: '1 1 65px', padding: '0.4rem 0.5rem', fontSize: '0.8rem', textAlign: 'center' }}
-                        onClick={() => onOpenDonate(prog.title)}
-                      >
-                        Donate
-                      </button>
-                      <Link
-                        to="/causes"
-                        className="btn btn-primary btn-sm"
-                        style={{ flex: '1 1 65px', padding: '0.4rem 0.5rem', fontSize: '0.8rem', textAlign: 'center' }}
-                      >
-                        Learn More
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {displayPrograms.slice(0, 6).map((prog, idx) => (
+              <ProgramCard
+                key={prog._id || prog.id || idx}
+                program={prog}
+                onOpenDonate={onOpenDonate}
+                onOpenDetails={(p) => setSelectedProgram(p)}
+              />
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '2.75rem' }}>
+            <Link
+              to="/programs"
+              className="btn btn-outline btn-lg"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem' }}
+            >
+              <span>View All {displayPrograms.length} Social Programs</span>
+              <ArrowRight size={18} />
+            </Link>
           </div>
         </div>
       </section>
 
       {/* ===================================================================
-          6. FEATURED CAMPAIGN
+          6. FEATURED CAMPAIGN & URGENT RELIEF APPEALS
           =================================================================== */}
       <section className="section" id="featured-campaign-section">
         <div className="container">
-          <div style={{
-            background: 'linear-gradient(135deg, #022c22 0%, #0f766e 100%)',
-            borderRadius: 'var(--radius-xl)',
-            overflow: 'hidden',
-            color: 'white',
-            boxShadow: 'var(--shadow-xl)'
-          }}>
-            <div className="grid grid-2" style={{ alignItems: 'center' }}>
-              <div style={{ padding: 'clamp(1.5rem, 4vw, 3.5rem)', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  <span className="section-tag tag-accent" style={{ margin: 0 }}>
-                    🚨 Featured Urgent Campaign
-                  </span>
-                  <span style={{ fontSize: '0.85rem', color: '#fef08a', fontWeight: 600 }}>
-                    ⏳ Deadline: 18 Days Left
-                  </span>
-                </div>
+          <div className="section-header" style={{ marginBottom: '2.5rem' }}>
+            <span className="section-tag tag-accent">Urgent Appeals</span>
+            <h2 className="section-title">Critical & Time-Sensitive Campaigns</h2>
+            <p className="section-subtitle">
+              Every second counts. Your rapid contribution helps us deliver urgent medical relief, nutritional care, and flood recovery directly to vulnerable communities.
+            </p>
+          </div>
 
-                <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', color: 'white', lineHeight: 1.2 }}>
-                  Emergency Neonatal Wing & Malnutrition Care Unit
-                </h2>
+          {featuredCampaign && (
+            <CampaignCard
+              campaign={featuredCampaign}
+              variant="featured"
+              onOpenDonate={onOpenDonate}
+              onOpenDetails={(camp) => setSelectedCampaign(camp)}
+            />
+          )}
 
-                <p style={{ color: '#ccfbf1', fontSize: '1.05rem', lineHeight: 1.65 }}>
-                  <strong>Objective:</strong> Furnishing a specialized neonatal stabilization ICU with incubators, phototherapy units, pediatric oxygen support, and therapeutic clinical nutrition to save 400+ severely malnourished infants in tribal forest belts.
-                </p>
-
-                {/* Progress Bar & Stats */}
-                <div style={{ margin: '0.5rem 0' }}>
-                  <div className="progress-track" style={{ height: '12px', background: 'rgba(255, 255, 255, 0.2)' }}>
-                    <div className="progress-bar-fill" style={{ width: '80%', background: 'linear-gradient(90deg, #fbbf24 0%, #f97316 100%)' }} />
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', color: '#e0f2fe', marginTop: '0.5rem', flexWrap: 'wrap', gap: '0.25rem' }}>
-                    <span>Amount Raised: <strong style={{ color: '#fef08a' }}>₹6,84,000</strong></span>
-                    <span>Amount Required: <strong style={{ color: 'white' }}>₹8,50,000</strong> (80%)</span>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.8)', marginTop: '0.35rem', flexWrap: 'wrap', gap: '0.25rem' }}>
-                    <span>Beneficiaries: <strong>400+ Infants & Mothers</strong></span>
-                    <span>Donors: <strong>1,240 Backers</strong></span>
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-                  <button
-                    type="button"
-                    className="btn btn-secondary btn-lg pulse-animation"
-                    onClick={() => onOpenDonate('Featured: Emergency Neonatal Unit')}
-                  >
-                    <Heart size={18} fill="white" />
-                    Donate Now
-                  </button>
-                  <Link
-                    to="/causes"
-                    className="btn btn-outline-white btn-lg"
-                  >
-                    View Campaign Details
-                  </Link>
-                </div>
+          {otherCampaigns.length > 0 && (
+            <div style={{ marginTop: '2.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+                <h3 style={{ fontSize: '1.35rem', margin: 0, fontWeight: 700 }}>
+                  Other Active Emergency Relief Causes
+                </h3>
+                <Link to="/campaigns" className="btn btn-outline btn-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                  View All Campaigns ({displayCampaigns.length}) <ArrowRight size={15} />
+                </Link>
+              </div>
+              <div className="campaigns-grid">
+                {otherCampaigns.slice(0, 6).map((camp) => (
+                  <CampaignCard
+                    key={camp._id || camp.id}
+                    campaign={camp}
+                    variant="card"
+                    onOpenDonate={onOpenDonate}
+                    onOpenDetails={(c) => setSelectedCampaign(c)}
+                  />
+                ))}
               </div>
 
-              <div style={{ width: '100%', height: 'clamp(260px, 40vw, 480px)' }}>
-                <img
-                  src="/assets/images/cause-3.jpg"
-                  alt="Neonatal Care Campaign"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
+              <div style={{ textAlign: 'center', marginTop: '2.75rem' }}>
+                <Link
+                  to="/campaigns"
+                  className="btn btn-secondary btn-lg"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem' }}
+                >
+                  <span>Explore All {displayCampaigns.length} Emergency Campaigns</span>
+                  <ArrowRight size={18} />
+                </Link>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
@@ -1349,6 +1487,24 @@ export default function Home({
           </div>
         </div>
       </section>
+
+      {/* Program Detail Modal */}
+      <ProgramModal
+        program={selectedProgram}
+        isOpen={Boolean(selectedProgram)}
+        onClose={() => setSelectedProgram(null)}
+        onOpenDonate={onOpenDonate}
+        onOpenVolunteer={onOpenVolunteer}
+      />
+
+      {/* Campaign Detail Modal */}
+      <CampaignModal
+        campaign={selectedCampaign}
+        isOpen={Boolean(selectedCampaign)}
+        onClose={() => setSelectedCampaign(null)}
+        onOpenDonate={onOpenDonate}
+        onOpenVolunteer={onOpenVolunteer}
+      />
     </>
   );
 }

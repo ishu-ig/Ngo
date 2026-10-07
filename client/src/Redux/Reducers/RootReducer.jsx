@@ -5,6 +5,7 @@ import CampaignReducer from "./CampaignReducer";
 import DonationReducer from "./DonationReducer";
 import VolunteerReducer from "./VolunteerReducer";
 import EventReducer from "./EventReducer";
+import TeamReducer from "./TeamReducer";
 import TeamMemberReducer from "./TeamMemberReducer";
 import PartnerReducer from "./PartnerReducer";
 import BlogReducer from "./BlogReducer";
@@ -22,6 +23,7 @@ export default combineReducers({
   DonationStateData: DonationReducer,
   VolunteerStateData: VolunteerReducer,
   EventStateData: EventReducer,
+  TeamStateData: TeamReducer,
   TeamMemberStateData: TeamMemberReducer,
   PartnerStateData: PartnerReducer,
   BlogStateData: BlogReducer,

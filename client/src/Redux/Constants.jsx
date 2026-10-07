@@ -58,6 +58,16 @@ export const UPDATE_EVENT_RED = "UPDATE_EVENT_RED";
 export const DELETE_EVENT = "DELETE_EVENT";
 export const DELETE_EVENT_RED = "DELETE_EVENT_RED";
 
+// Team
+export const CREATE_TEAM = "CREATE_TEAM";
+export const CREATE_TEAM_RED = "CREATE_TEAM_RED";
+export const GET_TEAM = "GET_TEAM";
+export const GET_TEAM_RED = "GET_TEAM_RED";
+export const UPDATE_TEAM = "UPDATE_TEAM";
+export const UPDATE_TEAM_RED = "UPDATE_TEAM_RED";
+export const DELETE_TEAM = "DELETE_TEAM";
+export const DELETE_TEAM_RED = "DELETE_TEAM_RED";
+
 // Team Member
 export const CREATE_TEAM_MEMBER = "CREATE_TEAM_MEMBER";
 export const CREATE_TEAM_MEMBER_RED = "CREATE_TEAM_MEMBER_RED";

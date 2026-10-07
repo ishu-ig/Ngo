@@ -51,6 +51,10 @@ async function createRecord(req, res) {
 async function getRecord(req, res) {
     try {
         let data = await TeamMember.find().sort({ _id: -1 });
+        if (!data || data.length === 0) {
+            const Team = require("../models/Team");
+            data = await Team.find().sort({ _id: -1 });
+        }
         res.send({
             result: "Done",
             count: data.length,

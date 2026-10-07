@@ -23,7 +23,13 @@ import {
   Handshake,
   UserPlus,
   Building,
-  HeartHandshake
+  HeartHandshake,
+  Home,
+  MapPin,
+  CreditCard,
+  HelpCircle,
+  Flame,
+  Gift
 } from 'lucide-react';
 
 export default function Navbar({
@@ -39,12 +45,14 @@ export default function Navbar({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [mobileExpanded, setMobileExpanded] = useState({
+    home: false,
     about: false,
     programs: false,
-    impact: false,
+    donate: false,
     media: false,
-    involved: false,
+    contact: false,
   });
+
 
   // Close dropdown on outside click, route change, or escape
   useEffect(() => {
@@ -162,11 +170,66 @@ export default function Navbar({
           {/* Desktop Navigation */}
           <nav className="desktop-nav">
             <ul className="nav-links">
-              {/* 1. Home */}
-              <li className="nav-item">
-                <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                  Home
+              {/* 1. Home Dropdown */}
+              <li
+                className={`nav-item ${openDropdown === 'home' ? 'nav-dropdown-open' : ''}`}
+                onMouseEnter={() => setOpenDropdown('home')}
+                onMouseLeave={() => setOpenDropdown(null)}
+              >
+                <NavLink
+                  to="/"
+                  className={({ isActive }) => `nav-link ${isActive && location.pathname === '/' ? 'active' : ''}`}
+                  onClick={() => setOpenDropdown(null)}
+                >
+                  Home <ChevronDown size={14} className="dropdown-chevron" />
                 </NavLink>
+                <div className="nav-dropdown-menu dropdown-align-left" style={{ width: '310px' }}>
+                  <Link to="/" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                    <div className="dropdown-icon" style={{ background: 'rgba(20, 184, 166, 0.12)', color: '#0f766e' }}>
+                      <Home size={16} />
+                    </div>
+                    <div className="dropdown-text">
+                      <span className="dropdown-title">Main Overview</span>
+                      <span className="dropdown-desc">Hero mission, live metrics & video</span>
+                    </div>
+                  </Link>
+                  <Link to="/campaigns" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                    <div className="dropdown-icon" style={{ background: 'rgba(239, 68, 68, 0.12)', color: '#dc2626' }}>
+                      <Flame size={16} />
+                    </div>
+                    <div className="dropdown-text">
+                      <span className="dropdown-title">Urgent Relief Drives</span>
+                      <span className="dropdown-desc">Critical emergency appeals</span>
+                    </div>
+                  </Link>
+                  <a href="/#impact-section" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                    <div className="dropdown-icon" style={{ background: 'rgba(168, 85, 247, 0.12)', color: '#9333ea' }}>
+                      <Award size={16} />
+                    </div>
+                    <div className="dropdown-text">
+                      <span className="dropdown-title">Verified Impact Highlights</span>
+                      <span className="dropdown-desc">68,000+ lives transformed</span>
+                    </div>
+                  </a>
+                  <a href="/#stories-section" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                    <div className="dropdown-icon" style={{ background: 'rgba(59, 130, 246, 0.12)', color: '#2563eb' }}>
+                      <Users size={16} />
+                    </div>
+                    <div className="dropdown-text">
+                      <span className="dropdown-title">Beneficiary Stories</span>
+                      <span className="dropdown-desc">Real journeys from the ground</span>
+                    </div>
+                  </a>
+                  <a href="/#partners-section" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                    <div className="dropdown-icon" style={{ background: 'rgba(245, 158, 11, 0.12)', color: '#d97706' }}>
+                      <Building size={16} />
+                    </div>
+                    <div className="dropdown-text">
+                      <span className="dropdown-title">Our Partners & Alliances</span>
+                      <span className="dropdown-desc">Institutional allies & CSR sponsors</span>
+                    </div>
+                  </a>
+                </div>
               </li>
 
               {/* 2. About Us Dropdown */}
@@ -175,39 +238,39 @@ export default function Navbar({
                 onMouseEnter={() => setOpenDropdown('about')}
                 onMouseLeave={() => setOpenDropdown(null)}
               >
-                <button
-                  type="button"
-                  className="nav-link"
-                  onClick={() => setOpenDropdown(openDropdown === 'about' ? null : 'about')}
+                <NavLink
+                  to="/about"
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                  onClick={() => setOpenDropdown(null)}
                 >
                   About Us <ChevronDown size={14} className="dropdown-chevron" />
-                </button>
-                <div className="nav-dropdown-menu">
+                </NavLink>
+                <div className="nav-dropdown-menu" style={{ width: '315px' }}>
                   <Link to="/about" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
                     <div className="dropdown-icon" style={{ background: 'rgba(20, 184, 166, 0.12)', color: '#0f766e' }}>
                       <Target size={16} />
                     </div>
                     <div className="dropdown-text">
                       <span className="dropdown-title">Mission & Vision</span>
-                      <span className="dropdown-desc">Our core purpose, history & goals</span>
+                      <span className="dropdown-desc">Our history, founding ethos & roadmap</span>
                     </div>
                   </Link>
-                  <Link to="/about" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                  <Link to="/about#leadership" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
                     <div className="dropdown-icon" style={{ background: 'rgba(59, 130, 246, 0.12)', color: '#2563eb' }}>
                       <Users size={16} />
                     </div>
                     <div className="dropdown-text">
-                      <span className="dropdown-title">Leadership & Team</span>
-                      <span className="dropdown-desc">Trustees, doctors & coordinators</span>
+                      <span className="dropdown-title">Passionate Leaders on the Ground</span>
+                      <span className="dropdown-desc">Executive trustees & field directors</span>
                     </div>
                   </Link>
-                  <Link to="/about" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                  <Link to="/about#reports" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
                     <div className="dropdown-icon" style={{ background: 'rgba(16, 185, 129, 0.12)', color: '#059669' }}>
                       <Shield size={16} />
                     </div>
                     <div className="dropdown-text">
-                      <span className="dropdown-title">Financial Transparency</span>
-                      <span className="dropdown-desc">92% direct program spending ratio</span>
+                      <span className="dropdown-title">Financial Audit & 80G Reports</span>
+                      <span className="dropdown-desc">92% program spending ratio (PDF)</span>
                     </div>
                   </Link>
                   <a href="/#partners-section" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
@@ -215,8 +278,8 @@ export default function Navbar({
                       <Building size={16} />
                     </div>
                     <div className="dropdown-text">
-                      <span className="dropdown-title">Partners & Sponsors</span>
-                      <span className="dropdown-desc">Institutional allies & supporters</span>
+                      <span className="dropdown-title">Institutional Allies</span>
+                      <span className="dropdown-desc">Corporate sponsors & partners</span>
                     </div>
                   </a>
                 </div>
@@ -228,125 +291,141 @@ export default function Navbar({
                 onMouseEnter={() => setOpenDropdown('programs')}
                 onMouseLeave={() => setOpenDropdown(null)}
               >
-                <button
-                  type="button"
-                  className="nav-link"
-                  onClick={() => setOpenDropdown(openDropdown === 'programs' ? null : 'programs')}
+                <NavLink
+                  to="/programs"
+                  className={({ isActive }) => `nav-link ${isActive || location.pathname === '/campaigns' || location.pathname === '/causes' ? 'active' : ''}`}
+                  onClick={() => setOpenDropdown(null)}
                 >
                   Programs <ChevronDown size={14} className="dropdown-chevron" />
-                </button>
-                <div className="nav-dropdown-menu" style={{ width: '310px' }}>
-                  <Link to="/causes" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                </NavLink>
+                <div className="nav-dropdown-menu" style={{ width: '320px' }}>
+                  <Link to="/programs" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
                     <div className="dropdown-icon" style={{ background: 'rgba(20, 184, 166, 0.12)', color: '#0f766e' }}>
                       <BookOpen size={16} />
                     </div>
                     <div className="dropdown-text">
-                      <span className="dropdown-title">All 8 Core Programs</span>
-                      <span className="dropdown-desc">Education, Health, Food, Water & Skills</span>
+                      <span className="dropdown-title">All Social Programs</span>
+                      <span className="dropdown-desc">Education, healthcare, food & water</span>
+                    </div>
+                  </Link>
+                  <Link to="/campaigns" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                    <div className="dropdown-icon" style={{ background: 'rgba(239, 68, 68, 0.12)', color: '#dc2626' }}>
+                      <Flame size={16} />
+                    </div>
+                    <div className="dropdown-text">
+                      <span className="dropdown-title">Urgent Disaster Campaigns</span>
+                      <span className="dropdown-desc">Emergency flood relief & ICU appeals</span>
                     </div>
                   </Link>
                   <Link to="/causes" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
                     <div className="dropdown-icon" style={{ background: 'rgba(59, 130, 246, 0.12)', color: '#0284c7' }}>
-                      <Stethoscope size={16} />
+                      <Heart size={16} />
                     </div>
                     <div className="dropdown-text">
-                      <span className="dropdown-title">Mobile Pediatric Healthcare</span>
-                      <span className="dropdown-desc">Diagnostics, medicines & doctor vans</span>
+                      <span className="dropdown-title">All Causes & Drives</span>
+                      <span className="dropdown-desc">Direct grassroots community projects</span>
                     </div>
                   </Link>
-                  <Link to="/causes" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
-                    <div className="dropdown-icon" style={{ background: 'rgba(16, 185, 129, 0.12)', color: '#16a34a' }}>
-                      <Droplet size={16} />
-                    </div>
-                    <div className="dropdown-text">
-                      <span className="dropdown-title">Clean Water & Solar Plants</span>
-                      <span className="dropdown-desc">RO water infrastructure in rural areas</span>
-                    </div>
-                  </Link>
-                  <a href="/#featured-campaign-section" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
-                    <div className="dropdown-icon" style={{ background: 'rgba(239, 68, 68, 0.12)', color: '#dc2626' }}>
-                      <Sparkles size={16} />
-                    </div>
-                    <div className="dropdown-text">
-                      <span className="dropdown-title">Urgent Neonatal ICU</span>
-                      <span className="dropdown-desc">Emergency malnutrition & infant aid</span>
-                    </div>
-                  </a>
                 </div>
               </li>
 
-              {/* 4. Our Impact Dropdown */}
+              {/* 4. Donate & Act Dropdown */}
               <li
-                className={`nav-item ${openDropdown === 'impact' ? 'nav-dropdown-open' : ''}`}
-                onMouseEnter={() => setOpenDropdown('impact')}
+                className={`nav-item ${openDropdown === 'donate' ? 'nav-dropdown-open' : ''}`}
+                onMouseEnter={() => setOpenDropdown('donate')}
                 onMouseLeave={() => setOpenDropdown(null)}
               >
-                <button
-                  type="button"
-                  className="nav-link"
-                  onClick={() => setOpenDropdown(openDropdown === 'impact' ? null : 'impact')}
+                <NavLink
+                  to="/donate"
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                  onClick={() => setOpenDropdown(null)}
                 >
-                  Our Impact <ChevronDown size={14} className="dropdown-chevron" />
-                </button>
-                <div className="nav-dropdown-menu">
-                  <a href="/#impact-section" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
-                    <div className="dropdown-icon" style={{ background: 'rgba(168, 85, 247, 0.12)', color: '#9333ea' }}>
-                      <Award size={16} />
+                  Donate & Act <ChevronDown size={14} className="dropdown-chevron" />
+                </NavLink>
+                <div className="nav-dropdown-menu" style={{ width: '315px' }}>
+                  <Link to="/donate" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                    <div className="dropdown-icon" style={{ background: 'rgba(225, 29, 72, 0.12)', color: '#e11d48' }}>
+                      <CreditCard size={16} />
                     </div>
                     <div className="dropdown-text">
-                      <span className="dropdown-title">Impact Metrics & Data</span>
-                      <span className="dropdown-desc">68,000+ lives positively transformed</span>
+                      <span className="dropdown-title">Online Donation Portal</span>
+                      <span className="dropdown-desc">Secure giving with 80G tax receipt</span>
                     </div>
-                  </a>
-                  <a href="/#stories-section" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
-                    <div className="dropdown-icon" style={{ background: 'rgba(59, 130, 246, 0.12)', color: '#2563eb' }}>
-                      <Users size={16} />
+                  </Link>
+                  <Link to="/donate#ways-to-give" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                    <div className="dropdown-icon" style={{ background: 'rgba(16, 185, 129, 0.12)', color: '#059669' }}>
+                      <Shield size={16} />
                     </div>
                     <div className="dropdown-text">
-                      <span className="dropdown-title">Success Stories</span>
-                      <span className="dropdown-desc">Real transformations from the ground</span>
+                      <span className="dropdown-title">80G Tax Exemption Benefits</span>
+                      <span className="dropdown-desc">Claim 50% tax deduction under 80G</span>
                     </div>
-                  </a>
+                  </Link>
                   <button
                     type="button"
                     className="dropdown-item"
                     onClick={() => {
                       setOpenDropdown(null);
-                      if (onOpenImpactReport) onOpenImpactReport();
+                      if (onOpenVolunteer) onOpenVolunteer();
                     }}
                   >
-                    <div className="dropdown-icon" style={{ background: 'rgba(20, 184, 166, 0.12)', color: '#0f766e' }}>
-                      <FileText size={16} />
+                    <div className="dropdown-icon" style={{ background: 'rgba(56, 189, 248, 0.12)', color: '#0284c7' }}>
+                      <UserPlus size={16} />
                     </div>
                     <div className="dropdown-text">
-                      <span className="dropdown-title">Annual Reports (PDF)</span>
-                      <span className="dropdown-desc">Download audited financial statements</span>
+                      <span className="dropdown-title">Join as a Volunteer</span>
+                      <span className="dropdown-desc">Field tutoring, kits & medical drives</span>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className="dropdown-item"
+                    onClick={() => {
+                      setOpenDropdown(null);
+                      if (onOpenPartner) onOpenPartner();
+                    }}
+                  >
+                    <div className="dropdown-icon" style={{ background: 'rgba(245, 158, 11, 0.12)', color: '#d97706' }}>
+                      <Handshake size={16} />
+                    </div>
+                    <div className="dropdown-text">
+                      <span className="dropdown-title">Corporate CSR Partner</span>
+                      <span className="dropdown-desc">Institutional grants & village adoption</span>
                     </div>
                   </button>
                 </div>
               </li>
 
-              {/* 5. Media & News Dropdown */}
+              {/* 5. Events & Media Dropdown */}
               <li
                 className={`nav-item ${openDropdown === 'media' ? 'nav-dropdown-open' : ''}`}
                 onMouseEnter={() => setOpenDropdown('media')}
                 onMouseLeave={() => setOpenDropdown(null)}
               >
-                <button
-                  type="button"
-                  className="nav-link"
-                  onClick={() => setOpenDropdown(openDropdown === 'media' ? null : 'media')}
+                <NavLink
+                  to="/events"
+                  className={({ isActive }) => `nav-link ${isActive || location.pathname === '/gallery' || location.pathname === '/blog' ? 'active' : ''}`}
+                  onClick={() => setOpenDropdown(null)}
                 >
-                  Media <ChevronDown size={14} className="dropdown-chevron" />
-                </button>
-                <div className="nav-dropdown-menu">
+                  Events & Media <ChevronDown size={14} className="dropdown-chevron" />
+                </NavLink>
+                <div className="nav-dropdown-menu" style={{ width: '310px' }}>
+                  <Link to="/events" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                    <div className="dropdown-icon" style={{ background: 'rgba(249, 115, 22, 0.12)', color: '#ea580c' }}>
+                      <Calendar size={16} />
+                    </div>
+                    <div className="dropdown-text">
+                      <span className="dropdown-title">Charity Events & Camps</span>
+                      <span className="dropdown-desc">Health checkups, drives & RSVPs</span>
+                    </div>
+                  </Link>
                   <Link to="/gallery" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
                     <div className="dropdown-icon" style={{ background: 'rgba(59, 130, 246, 0.12)', color: '#2563eb' }}>
                       <Image size={16} />
                     </div>
                     <div className="dropdown-text">
                       <span className="dropdown-title">Photo & Video Gallery</span>
-                      <span className="dropdown-desc">Moments captured across our fields</span>
+                      <span className="dropdown-desc">High-res moments from field centers</span>
                     </div>
                   </Link>
                   <Link to="/blog" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
@@ -354,27 +433,64 @@ export default function Navbar({
                       <FileText size={16} />
                     </div>
                     <div className="dropdown-text">
-                      <span className="dropdown-title">Blog & Field News</span>
-                      <span className="dropdown-desc">Inspiring dispatches and articles</span>
-                    </div>
-                  </Link>
-                  <Link to="/events" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
-                    <div className="dropdown-icon" style={{ background: 'rgba(249, 115, 22, 0.12)', color: '#ea580c' }}>
-                      <Calendar size={16} />
-                    </div>
-                    <div className="dropdown-text">
-                      <span className="dropdown-title">Charity Events & Camps</span>
-                      <span className="dropdown-desc">Health drives, marathons & RSVPs</span>
+                      <span className="dropdown-title">Blog & Field Dispatches</span>
+                      <span className="dropdown-desc">Inspiring stories & latest articles</span>
                     </div>
                   </Link>
                 </div>
               </li>
 
-              {/* 6. Contact Us */}
-              <li className="nav-item">
-                <NavLink to="/contact" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                  Contact
+              {/* 6. Contact Us Dropdown */}
+              <li
+                className={`nav-item ${openDropdown === 'contact' ? 'nav-dropdown-open' : ''}`}
+                onMouseEnter={() => setOpenDropdown('contact')}
+                onMouseLeave={() => setOpenDropdown(null)}
+              >
+                <NavLink
+                  to="/contact"
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                  onClick={() => setOpenDropdown(null)}
+                >
+                  Contact <ChevronDown size={14} className="dropdown-chevron" />
                 </NavLink>
+                <div className="nav-dropdown-menu dropdown-align-right" style={{ width: '310px' }}>
+                  <Link to="/contact" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                    <div className="dropdown-icon" style={{ background: 'rgba(20, 184, 166, 0.12)', color: '#0f766e' }}>
+                      <Phone size={16} />
+                    </div>
+                    <div className="dropdown-text">
+                      <span className="dropdown-title">Support & Helpline Desk</span>
+                      <span className="dropdown-desc">Direct phone, email & message inquiry</span>
+                    </div>
+                  </Link>
+                  <Link to="/contact#locations" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                    <div className="dropdown-icon" style={{ background: 'rgba(59, 130, 246, 0.12)', color: '#2563eb' }}>
+                      <MapPin size={16} />
+                    </div>
+                    <div className="dropdown-text">
+                      <span className="dropdown-title">Headquarters & Centers</span>
+                      <span className="dropdown-desc">Delhi HQ & regional field hubs</span>
+                    </div>
+                  </Link>
+                  <Link to="/donate#ways-to-give" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                    <div className="dropdown-icon" style={{ background: 'rgba(168, 85, 247, 0.12)', color: '#9333ea' }}>
+                      <Building size={16} />
+                    </div>
+                    <div className="dropdown-text">
+                      <span className="dropdown-title">Direct Bank Transfer (NEFT)</span>
+                      <span className="dropdown-desc">Official bank details for wire transfers</span>
+                    </div>
+                  </Link>
+                  <Link to="/contact#locations" className="dropdown-item" onClick={() => setOpenDropdown(null)}>
+                    <div className="dropdown-icon" style={{ background: 'rgba(245, 158, 11, 0.12)', color: '#d97706' }}>
+                      <HelpCircle size={16} />
+                    </div>
+                    <div className="dropdown-text">
+                      <span className="dropdown-title">Volunteer & CSR Queries</span>
+                      <span className="dropdown-desc">Prompt resolution from our care team</span>
+                    </div>
+                  </Link>
+                </div>
               </li>
             </ul>
           </nav>
@@ -438,10 +554,27 @@ export default function Navbar({
         </div>
 
         <ul className="mobile-nav-links">
+          {/* Home Accordion */}
           <li>
-            <NavLink to="/" className="mobile-nav-link" onClick={closeMobileMenu}>
-              Home
-            </NavLink>
+            <div
+              className="mobile-nav-link accordion-trigger"
+              onClick={() => toggleMobileAccordion('home')}
+            >
+              <span>Home</span>
+              <ChevronDown
+                size={16}
+                className={`accordion-chevron ${mobileExpanded.home ? 'expanded' : ''}`}
+              />
+            </div>
+            {mobileExpanded.home && (
+              <div className="mobile-accordion-body">
+                <Link to="/" onClick={closeMobileMenu}>• Main Overview & Hero</Link>
+                <Link to="/campaigns" onClick={closeMobileMenu}>• Urgent Relief Drives</Link>
+                <a href="/#impact-section" onClick={closeMobileMenu}>• Verified Impact Highlights</a>
+                <a href="/#stories-section" onClick={closeMobileMenu}>• Beneficiary Stories</a>
+                <a href="/#partners-section" onClick={closeMobileMenu}>• Institutional Partners</a>
+              </div>
+            )}
           </li>
 
           {/* About Accordion */}
@@ -458,10 +591,11 @@ export default function Navbar({
             </div>
             {mobileExpanded.about && (
               <div className="mobile-accordion-body">
-                <Link to="/about" onClick={closeMobileMenu}>• Mission & Vision</Link>
-                <Link to="/about" onClick={closeMobileMenu}>• Leadership Team</Link>
-                <Link to="/about" onClick={closeMobileMenu}>• Financial Transparency</Link>
-                <a href="/#partners-section" onClick={closeMobileMenu}>• Partners & Sponsors</a>
+                <Link to="/about" onClick={closeMobileMenu}>• About Foundation</Link>
+                <Link to="/about#mission" onClick={closeMobileMenu}>• Mission, Vision & Values</Link>
+                <Link to="/about#leadership" onClick={closeMobileMenu}>• Passionate Leaders on the Ground</Link>
+                <Link to="/about#reports" onClick={closeMobileMenu}>• Financial Audit & 80G Reports (PDF)</Link>
+                <a href="/#partners-section" onClick={closeMobileMenu}>• Partners & Alliances</a>
               </div>
             )}
           </li>
@@ -480,51 +614,60 @@ export default function Navbar({
             </div>
             {mobileExpanded.programs && (
               <div className="mobile-accordion-body">
-                <Link to="/causes" onClick={closeMobileMenu}>• All 8 Core Programs</Link>
-                <Link to="/causes" onClick={closeMobileMenu}>• Mobile Pediatric Health</Link>
-                <Link to="/causes" onClick={closeMobileMenu}>• Clean Water Infrastructure</Link>
-                <a href="/#featured-campaign-section" onClick={closeMobileMenu}>• Urgent Neonatal ICU</a>
+                <Link to="/programs" onClick={closeMobileMenu}>• All Social Programs</Link>
+                <Link to="/campaigns" onClick={closeMobileMenu}>• Urgent Disaster Relief Campaigns</Link>
+                <Link to="/causes" onClick={closeMobileMenu}>• All Causes & Drives Catalog</Link>
               </div>
             )}
           </li>
 
-          {/* Impact Accordion */}
+          {/* Donate & Act Accordion */}
           <li>
             <div
               className="mobile-nav-link accordion-trigger"
-              onClick={() => toggleMobileAccordion('impact')}
+              onClick={() => toggleMobileAccordion('donate')}
             >
-              <span>Our Impact</span>
+              <span>Donate & Act</span>
               <ChevronDown
                 size={16}
-                className={`accordion-chevron ${mobileExpanded.impact ? 'expanded' : ''}`}
+                className={`accordion-chevron ${mobileExpanded.donate ? 'expanded' : ''}`}
               />
             </div>
-            {mobileExpanded.impact && (
+            {mobileExpanded.donate && (
               <div className="mobile-accordion-body">
-                <a href="/#impact-section" onClick={closeMobileMenu}>• Verified Metrics & Data</a>
-                <a href="/#stories-section" onClick={closeMobileMenu}>• Beneficiary Stories</a>
+                <Link to="/donate" onClick={closeMobileMenu}>• Online Donation Portal</Link>
+                <Link to="/donate#ways-to-give" onClick={closeMobileMenu}>• 80G & 12A Tax Exemption Benefits</Link>
                 <button
                   type="button"
                   className="mobile-text-btn"
                   onClick={() => {
                     closeMobileMenu();
-                    if (onOpenImpactReport) onOpenImpactReport();
+                    if (onOpenVolunteer) onOpenVolunteer();
                   }}
                 >
-                  • Annual Reports (PDF)
+                  • Join as Volunteer
+                </button>
+                <button
+                  type="button"
+                  className="mobile-text-btn"
+                  onClick={() => {
+                    closeMobileMenu();
+                    if (onOpenPartner) onOpenPartner();
+                  }}
+                >
+                  • Corporate CSR Partnerships
                 </button>
               </div>
             )}
           </li>
 
-          {/* Media Accordion */}
+          {/* Media & Events Accordion */}
           <li>
             <div
               className="mobile-nav-link accordion-trigger"
               onClick={() => toggleMobileAccordion('media')}
             >
-              <span>Media & Stories</span>
+              <span>Events & Media</span>
               <ChevronDown
                 size={16}
                 className={`accordion-chevron ${mobileExpanded.media ? 'expanded' : ''}`}
@@ -532,18 +675,32 @@ export default function Navbar({
             </div>
             {mobileExpanded.media && (
               <div className="mobile-accordion-body">
+                <Link to="/events" onClick={closeMobileMenu}>• Charity Events & Medical Camps</Link>
                 <Link to="/gallery" onClick={closeMobileMenu}>• Photo & Video Gallery</Link>
-                <Link to="/blog" onClick={closeMobileMenu}>• Blog & Field News</Link>
-                <Link to="/events" onClick={closeMobileMenu}>• Upcoming Charity Drives</Link>
+                <Link to="/blog" onClick={closeMobileMenu}>• Blog & Field Dispatches</Link>
               </div>
             )}
           </li>
 
-          {/* Contact */}
+          {/* Contact Accordion */}
           <li>
-            <NavLink to="/contact" className="mobile-nav-link" onClick={closeMobileMenu}>
-              Contact Us
-            </NavLink>
+            <div
+              className="mobile-nav-link accordion-trigger"
+              onClick={() => toggleMobileAccordion('contact')}
+            >
+              <span>Contact Us</span>
+              <ChevronDown
+                size={16}
+                className={`accordion-chevron ${mobileExpanded.contact ? 'expanded' : ''}`}
+              />
+            </div>
+            {mobileExpanded.contact && (
+              <div className="mobile-accordion-body">
+                <Link to="/contact" onClick={closeMobileMenu}>• Support & Care Helpline</Link>
+                <Link to="/contact#locations" onClick={closeMobileMenu}>• Headquarters & Regional Desks</Link>
+                <Link to="/donate#ways-to-give" onClick={closeMobileMenu}>• Direct Bank Wire Info (NEFT)</Link>
+              </div>
+            )}
           </li>
         </ul>
 

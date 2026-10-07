@@ -175,7 +175,7 @@ export default function DonatePage({ onOpenDonate }) {
                 From corporate grants to legacy bequests, we offer tailored giving vehicles to align with your philanthropic vision.
               </p>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <div id="ways-to-give" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 <div style={{ background: 'white', padding: '1.5rem', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-light)', display: 'flex', gap: '1.25rem' }}>
                   <div style={{ width: 48, height: 48, borderRadius: 'var(--radius-md)', background: 'var(--primary-subtle)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <Building2 size={24} />

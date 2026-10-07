@@ -11,6 +11,8 @@ import ImpactReportModal from './Components/ImpactReportModal';
 
 import Home from './Pages/Home';
 import About from './Pages/About';
+import Programs from './Pages/Programs';
+import Campaigns from './Pages/Campaigns';
 import Causes from './Pages/Causes';
 import DonatePage from './Pages/DonatePage';
 import Events from './Pages/Events';
@@ -80,6 +82,24 @@ export default function App() {
               path="/about"
               element={
                 <About
+                  onOpenDonate={handleOpenDonate}
+                  onOpenVolunteer={() => setIsVolunteerOpen(true)}
+                />
+              }
+            />
+            <Route
+              path="/programs"
+              element={
+                <Programs
+                  onOpenDonate={handleOpenDonate}
+                  onOpenVolunteer={() => setIsVolunteerOpen(true)}
+                />
+              }
+            />
+            <Route
+              path="/campaigns"
+              element={
+                <Campaigns
                   onOpenDonate={handleOpenDonate}
                   onOpenVolunteer={() => setIsVolunteerOpen(true)}
                 />

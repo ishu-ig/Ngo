@@ -1612,3 +1612,249 @@ body.sidebar-open .sidebar-backdrop {
   font-size: 0.95rem;
   word-break: break-word;
 }
+
+/* ── Volunteer Application Profile (Theme Responsive) ───────────────────── */
+.volunteer-profile-hero {
+  border-radius: var(--admin-radius-lg);
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  box-shadow: var(--admin-shadow);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.volunteer-profile-hero:hover {
+  border-color: var(--admin-border-glow);
+  box-shadow: var(--admin-shadow-lg);
+}
+
+.volunteer-avatar-badge {
+  width: 68px;
+  height: 68px;
+  border-radius: var(--admin-radius);
+  background: var(--admin-primary-gradient);
+  color: #ffffff;
+  font-size: 1.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+.volunteer-detail-card {
+  background: var(--admin-surface-card);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius);
+  padding: 1.25rem;
+  height: 100%;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.volunteer-detail-card:hover {
+  border-color: var(--admin-border-glow);
+}
+
+.volunteer-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--admin-border-subtle);
+}
+
+.volunteer-card-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--admin-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.volunteer-card-title i {
+  color: var(--admin-primary);
+  font-size: 1rem;
+}
+
+.volunteer-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--admin-border-subtle);
+}
+
+.volunteer-info-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.volunteer-info-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--admin-radius-sm);
+  background: var(--admin-surface-soft);
+  color: var(--admin-primary);
+  border: 1px solid var(--admin-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.volunteer-info-content {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.volunteer-info-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  color: var(--admin-muted);
+  margin-bottom: 0.15rem;
+}
+
+.volunteer-info-value {
+  font-size: 0.93rem;
+  font-weight: 600;
+  color: var(--admin-text-strong);
+  word-break: break-word;
+}
+
+.volunteer-info-link {
+  color: var(--admin-text-strong);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.volunteer-info-link:hover {
+  color: var(--admin-primary);
+  text-decoration: underline;
+}
+
+/* Skills & Interest Chips */
+.volunteer-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--admin-radius-full);
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: all 0.18s ease;
+}
+
+.volunteer-chip-skill {
+  background: var(--admin-surface-soft);
+  color: var(--admin-text);
+  border: 1px solid var(--admin-border);
+}
+
+.volunteer-chip-skill:hover {
+  border-color: var(--admin-primary-light);
+  background: var(--admin-surface-card);
+  transform: translateY(-1px);
+}
+
+.volunteer-chip-interest {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+html[data-theme="dark"] .volunteer-chip-interest {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+html[data-theme="light"] .volunteer-chip-interest {
+  background: rgba(59, 130, 246, 0.09);
+  color: #1d4ed8;
+  border: 1px solid rgba(59, 130, 246, 0.22);
+}
+
+.volunteer-chip-interest:hover {
+  background: rgba(59, 130, 246, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Availability Badge */
+.volunteer-badge-avail {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--admin-radius-sm);
+  background: var(--admin-surface-soft);
+  color: var(--admin-text-strong);
+  border: 1px solid var(--admin-border);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* Motivation Statement Box */
+.volunteer-quote-box {
+  background: var(--admin-surface-soft);
+  border: 1px solid var(--admin-border);
+  border-left: 4px solid var(--admin-primary);
+  border-radius: 0 var(--admin-radius) var(--admin-radius) 0;
+  padding: 1.25rem 1.5rem;
+  position: relative;
+}
+
+.volunteer-quote-box p {
+  color: var(--admin-text);
+  line-height: 1.7;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Status Badges */
+.volunteer-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--admin-radius-full);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.volunteer-status-approved {
+  background: var(--admin-success-bg);
+  color: var(--admin-success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.volunteer-status-pending {
+  background: var(--admin-warning-bg);
+  color: var(--admin-warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.volunteer-status-in-review {
+  background: var(--admin-info-bg);
+  color: var(--admin-info);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.volunteer-status-rejected {
+  background: var(--admin-danger-bg);
+  color: var(--admin-danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}

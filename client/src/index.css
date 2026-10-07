@@ -659,6 +659,28 @@ button, input, textarea, select {
   transform: translateX(-50%) translateY(2px);
 }
 
+.nav-dropdown-menu.dropdown-align-left {
+  left: 0;
+  transform: translateX(0) translateY(8px);
+}
+
+.nav-item:hover .nav-dropdown-menu.dropdown-align-left,
+.nav-dropdown-open .nav-dropdown-menu.dropdown-align-left {
+  transform: translateX(0) translateY(2px);
+}
+
+.nav-dropdown-menu.dropdown-align-right {
+  left: auto;
+  right: 0;
+  transform: translateX(0) translateY(8px);
+}
+
+.nav-item:hover .nav-dropdown-menu.dropdown-align-right,
+.nav-dropdown-open .nav-dropdown-menu.dropdown-align-right {
+  transform: translateX(0) translateY(2px);
+}
+
+
 .dropdown-item {
   display: flex;
   align-items: center;
@@ -1862,73 +1884,609 @@ textarea.form-control {
 }
 
 /* ==========================================================================
-   PROGRAMS & CAUSES GRID: 4 Desktop, 3 Tablet (iPad/Tab), 2 Mobile (Phone)
+   PROGRAMS & CAUSES GRID: 3 in a row on Desktop, 2 in Mobile View
    ========================================================================== */
-.programs-grid {
+.programs-grid,
+.campaigns-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+  align-items: stretch;
 }
 
+/* Card Base & Flex Column */
+.programs-grid .cause-card,
+.campaigns-grid .cause-card {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border-radius: var(--radius-xl);
+  background: white;
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.programs-grid .cause-img-box,
+.campaigns-grid .cause-img-box {
+  position: relative;
+  height: 185px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.programs-grid .cause-body,
+.campaigns-grid .cause-body {
+  padding: 1.25rem;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+}
+
+/* Title & Description Fixed/Clamped Heights for Uniform Card Tops */
+.programs-grid .cause-title,
+.campaigns-grid .cause-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 2.7em;
+  color: var(--text-primary);
+}
+
+.programs-grid .cause-desc,
+.campaigns-grid .cause-desc {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 3.8em;
+}
+
+/* Metadata Items */
+.programs-grid .cause-meta-item,
+.campaigns-grid .cause-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  margin-bottom: 0.35rem;
+}
+
+/* Progress Area Pushed Downward */
+.programs-grid .cause-progress,
+.campaigns-grid .cause-progress {
+  margin-top: auto !important;
+  margin-bottom: 1rem !important;
+}
+
+.programs-grid .cause-progress-labels,
+.campaigns-grid .cause-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  margin-bottom: 0.35rem;
+}
+
+.programs-grid .progress-track,
+.campaigns-grid .progress-track {
+  height: 6px;
+}
+
+/* Buttons Pinned Perfectly to the Bottom Baseline */
+.programs-grid .cause-actions,
+.campaigns-grid .cause-actions {
+  margin-top: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.programs-grid .cause-actions .support-btn,
+.campaigns-grid .cause-actions .support-btn {
+  flex: 1 1 auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 0.85rem !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+  border-radius: var(--radius-full) !important;
+}
+
+.programs-grid .cause-actions .details-btn,
+.campaigns-grid .cause-actions .details-btn {
+  flex: 0 0 auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 1rem !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+  border-radius: var(--radius-full) !important;
+}
+
+.btn-text-full {
+  display: inline;
+}
+
+.btn-text-short {
+  display: none;
+}
+
+/* ==========================================================================
+   TABLET & MOBILE RESPONSIVE ADAPTATIONS
+   ========================================================================== */
 @media (max-width: 1024px) {
-  .programs-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 1.25rem;
+  .programs-grid,
+  .campaigns-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.15rem;
   }
 }
 
 @media (max-width: 768px) {
-  .programs-grid {
+  /* 2 in a row on mobile view */
+  .programs-grid,
+  .campaigns-grid {
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1rem;
+    gap: 0.75rem !important;
+  }
+
+  .programs-grid .cause-img-box,
+  .campaigns-grid .cause-img-box {
+    height: 120px !important;
+  }
+
+  .programs-grid .cause-category-badge,
+  .campaigns-grid .cause-category-badge {
+    font-size: 0.65rem !important;
+    padding: 0.2rem 0.45rem !important;
+    top: 0.45rem !important;
+    left: 0.45rem !important;
+    gap: 3px !important;
+  }
+
+  .programs-grid .cause-category-badge svg,
+  .campaigns-grid .cause-category-badge svg {
+    width: 11px !important;
+    height: 11px !important;
+  }
+
+  .programs-grid .cause-body,
+  .campaigns-grid .cause-body {
+    padding: 0.65rem !important;
+  }
+
+  .programs-grid .cause-title,
+  .campaigns-grid .cause-title {
+    font-size: 0.85rem !important;
+    line-height: 1.25 !important;
+    margin-bottom: 0.35rem !important;
+    height: 2.5em !important;
+  }
+
+  /* Only essential stuff on mobile: hide description & extra metadata */
+  .programs-grid .cause-desc,
+  .campaigns-grid .cause-desc,
+  .programs-grid .cause-meta-item,
+  .campaigns-grid .cause-meta-item,
+  .programs-grid .location-meta,
+  .campaigns-grid .location-meta,
+  .programs-grid .beneficiaries-meta,
+  .campaigns-grid .beneficiaries-meta {
+    display: none !important;
+  }
+
+  .programs-grid .cause-progress,
+  .campaigns-grid .cause-progress {
+    margin-top: auto !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .programs-grid .cause-progress-labels,
+  .campaigns-grid .cause-progress-labels {
+    font-size: 0.72rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .programs-grid .progress-track,
+  .campaigns-grid .progress-track {
+    height: 5px !important;
+  }
+
+  /* Mobile text adaptation */
+  .btn-text-full {
+    display: none !important;
+  }
+
+  .btn-text-short {
+    display: inline !important;
+  }
+
+  /* Symmetrically aligned 50/50 buttons on mobile */
+  .programs-grid .cause-actions,
+  .campaigns-grid .cause-actions {
+    margin-top: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+    width: 100% !important;
+  }
+
+  .programs-grid .cause-actions .support-btn,
+  .campaigns-grid .cause-actions .support-btn,
+  .programs-grid .cause-actions .details-btn,
+  .campaigns-grid .cause-actions .details-btn {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    height: 33px !important;
+    min-height: 33px !important;
+    padding: 0 0.35rem !important;
+    font-size: 0.75rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+    border-radius: var(--radius-full) !important;
+    white-space: nowrap !important;
   }
 }
 
 @media (max-width: 480px) {
-  .programs-grid {
+  .programs-grid,
+  .campaigns-grid {
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.75rem;
-  }
-
-  .programs-grid .cause-card {
-    border-radius: var(--radius-md);
+    gap: 0.55rem !important;
   }
 
   .programs-grid .cause-img-box,
-  .programs-grid .cause-img {
-    height: 130px !important;
+  .campaigns-grid .cause-img-box {
+    height: 110px !important;
   }
 
-  .programs-grid .cause-category-badge {
-    font-size: 0.65rem !important;
-    padding: 0.2rem 0.45rem !important;
-    top: 0.4rem !important;
-    left: 0.4rem !important;
+  .programs-grid .cause-body,
+  .campaigns-grid .cause-body {
+    padding: 0.55rem !important;
   }
 
-  .programs-grid .cause-body {
-    padding: 0.75rem !important;
+  .programs-grid .cause-title,
+  .campaigns-grid .cause-title {
+    font-size: 0.8rem !important;
   }
 
-  .programs-grid .cause-title {
-    font-size: 0.9rem !important;
-    line-height: 1.25 !important;
-    margin-bottom: 0.35rem !important;
-  }
-
-  .programs-grid .cause-desc {
-    font-size: 0.78rem !important;
-    line-height: 1.4 !important;
-    margin-bottom: 0.65rem !important;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .programs-grid .btn-sm {
-    padding: 0.35rem 0.45rem !important;
-    font-size: 0.75rem !important;
+  .programs-grid .cause-actions .support-btn,
+  .campaigns-grid .cause-actions .support-btn,
+  .programs-grid .cause-actions .details-btn,
+  .campaigns-grid .cause-actions .details-btn {
+    height: 31px !important;
+    min-height: 31px !important;
+    font-size: 0.72rem !important;
   }
 }
+
+/* Passionate Leaders Section - 2 Rows: Executive Row (2) & Swiper Row (4 on main screen) */
+.leaders-executive-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: 3.5rem;
+}
+
+/* ── Executive Leader Card (horizontal: image left, content right) ── */
+.leader-exec-card {
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 6px 28px rgba(13, 148, 136, 0.07), 0 1px 4px rgba(0,0,0,0.06);
+  border: 1px solid rgba(13, 148, 136, 0.12);
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  text-align: left;
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.leader-exec-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 40px rgba(13, 148, 136, 0.14), 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* ── Left image panel ── */
+.leader-exec-avatar-wrap {
+  position: relative;
+  width: 180px;
+  min-width: 180px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: linear-gradient(160deg, #0D9488 0%, #0e7490 100%);
+}
+
+/* Gradient top bar on the left panel */
+.leader-exec-avatar-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #2dd4bf, #0D9488, #0e7490);
+  z-index: 2;
+}
+
+/* Subtle shimmer overlay on image */
+.leader-exec-avatar-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(13,148,136,0.45) 100%);
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.leader-exec-card:hover .leader-exec-avatar-wrap::after {
+  opacity: 0.7;
+}
+
+.leader-exec-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.leader-exec-card:hover .leader-exec-avatar {
+  transform: scale(1.06);
+}
+
+/* Role badge — bottom of image panel */
+.leader-exec-role-badge {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  background: linear-gradient(90deg, #0D9488, #0e7490);
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+  border: 1.5px solid rgba(255,255,255,0.3);
+}
+
+/* ── Right content panel ── */
+.leader-exec-content-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.2rem 1.4rem;
+  justify-content: center;
+}
+
+/* Designation pill */
+.leader-exec-pill {
+  display: inline-block;
+  background: rgba(13, 148, 136, 0.09);
+  color: var(--primary, #0D9488);
+  border: 1px solid rgba(13, 148, 136, 0.22);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  margin-bottom: 0.45rem;
+  align-self: flex-start;
+}
+
+/* Name */
+.leader-exec-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main, #1e293b);
+  margin: 0 0 0.35rem;
+  line-height: 1.2;
+}
+
+/* Bio */
+.leader-exec-bio {
+  font-size: 0.85rem;
+  color: var(--text-secondary, #64748b);
+  line-height: 1.6;
+  margin: 0 0 0.8rem;
+  flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Social icons row */
+.leader-exec-socials {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(13, 148, 136, 0.1);
+  margin-top: auto;
+}
+
+/* Legacy horizontal layout classes (kept for backwards compat) */
+.leader-exec-img-box {
+  width: 200px;
+  min-width: 200px;
+  position: relative;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.leader-exec-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.leader-exec-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .leaders-executive-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .leader-exec-card {
+    flex-direction: column;
+  }
+
+  .leader-exec-avatar-wrap {
+    width: 100%;
+    min-width: 100%;
+    height: 220px;
+  }
+
+  .leader-exec-avatar-wrap::before {
+    height: 4px;
+  }
+
+  .leader-exec-content-panel {
+    padding: 1.25rem 1.4rem;
+  }
+}
+
+/* Swiper Row */
+.team-swiper-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.team-nav-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-light, #cbd5e1);
+  background: white;
+  color: var(--text-main, #1e293b);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.team-nav-btn:hover:not(:disabled) {
+  background: var(--primary, #0D9488);
+  border-color: var(--primary, #0D9488);
+  color: white;
+  transform: scale(1.05);
+}
+
+.team-nav-btn.swiper-button-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.team-swiper-card {
+  background: white;
+  border-radius: var(--radius-lg, 16px);
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-light, #e2e8f0);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.team-swiper-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.09);
+}
+
+.team-swiper-img-box {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.team-swiper-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.team-swiper-card:hover .team-swiper-img-box img {
+  transform: scale(1.05);
+}
+
+.team-swiper-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.team-swiper-pagination .swiper-pagination-bullet {
+  background: #cbd5e1;
+  opacity: 0.7;
+  width: 9px;
+  height: 9px;
+  transition: all 0.25s ease;
+}
+
+.team-swiper-pagination .swiper-pagination-bullet-active {
+  background: var(--primary, #0D9488);
+  opacity: 1;
+  width: 24px;
+  border-radius: 6px;
+}
+
+
 

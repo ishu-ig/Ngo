@@ -5,6 +5,7 @@ import CampaignSagas from "./CampaignSagas";
 import DonationSagas from "./DonationSagas";
 import VolunteerSagas from "./VolunteerSagas";
 import EventSagas from "./EventSagas";
+import TeamSagas from "./TeamSagas";
 import TeamMemberSagas from "./TeamMemberSagas";
 import PartnerSagas from "./PartnerSagas";
 import BlogSagas from "./BlogSagas";
@@ -23,6 +24,7 @@ export default function* RootSagas() {
     DonationSagas(),
     VolunteerSagas(),
     EventSagas(),
+    TeamSagas(),
     TeamMemberSagas(),
     PartnerSagas(),
     BlogSagas(),
